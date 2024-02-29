@@ -17,16 +17,14 @@ public class Team {
 
     private String name;
     private String manager;
-    private int leavePolicy;
-    private int memberCount;
+    private Integer leavePolicy;
+    private Integer memberCount = 0;
 
     // ==== 생성자 ==== //
     @Builder
-    public Team(String name, String manager, int leavePolicy, int memberCount) {
+    public Team(String name, Integer leavePolicy) {
         this.name = name;
-        this.manager = manager;
         this.leavePolicy = leavePolicy;
-        this.memberCount = memberCount;
     }
 
     // ==== 변경자 ==== //
@@ -35,17 +33,21 @@ public class Team {
         return this;
     }
 
-    public Team changeManager(String manager) {
-        this.manager = manager;
+    public Team changeManager(String managerName) {
+        this.manager = managerName;
         return this;
     }
 
-    public Team changeLeavePolicy(int leavePolicy) {
+    public Team changeLeavePolicy(Integer leavePolicy) {
         this.leavePolicy = leavePolicy;
         return this;
     }
 
     // ==== 편의 메서드 ==== //
+    public boolean hasManager() {
+        return this.manager != null;
+    }
+
     public void increaseMemberCount() {
         this.memberCount++;
     }

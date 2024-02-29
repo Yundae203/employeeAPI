@@ -2,10 +2,8 @@ package api.employee.domain;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.util.Assert;
 
 import java.time.LocalDate;
 
@@ -28,18 +26,60 @@ public class Member {
     private Role role;
     private LocalDate birthday;
     private LocalDate workStartDate;
+    @Embedded
+    private Leave leave;
 
     // ==== 생성자 ==== //
-    @Builder
-    public Member(Team team, String name, Role role, LocalDate birthday, LocalDate workStartDate) {
-        if (team != null) {
-            this.team = team;
-            this.team.increaseMemberCount();
+    public static MemberBuilder builder() {
+        return new MemberBuilder();
+    }
+    public static class MemberBuilder {
+        private String name;
+        private Role role;
+        private LocalDate birthday;
+        private LocalDate workStartDate;
+
+        public MemberBuilder name(String name) {
+            this.name = name;
+            return this;
         }
-        this.name = name;
-        this.role = role;
-        this.birthday = birthday;
-        this.workStartDate = workStartDate;
+
+        public MemberBuilder role(Role role) {
+            this.role = role;
+            return this;
+        }
+
+        public MemberBuilder birthday(LocalDate birthday) {
+            this.birthday = birthday;
+            return this;
+        }
+
+        public MemberBuilder workStartDate(LocalDate workStartDate) {
+            this.workStartDate = workStartDate;
+            return this;
+        }
+
+        public Member build() {
+            return new Member(this);
+        }
+    }
+
+    private Member(MemberBuilder builder) {
+
+        this.name = builder.name;
+        this.role = builder.role;
+        this.birthday = builder.birthday;
+        this.workStartDate = builder.workStartDate;
+        this.leave = new Leave(this.workStartDate);
+    }
+
+    // ==== 접근자 ==== //
+    public String getTeamName() {
+        return team.getName();
+    }
+
+    public String getRoleName() {
+        return role.name();
     }
 
     // ==== 변경자 ==== //
@@ -47,9 +87,7 @@ public class Member {
         if (this.team != null) {
             this.team.decreaseMemberCount();
         }
-
         this.team = team;
-
         if (team != null) {
             this.team.increaseMemberCount();
         }
@@ -58,9 +96,6 @@ public class Member {
 
     public Member changeRole(Role role) {
         this.role = role;
-        if(this.team != null && role == Role.MANAGER) {
-            this.team.changeManager(this.name);
-        }
         return this;
     }
 
@@ -77,5 +112,18 @@ public class Member {
     public Member changeWorkStartDate(LocalDate workStartDate) {
         this.workStartDate = workStartDate;
         return this;
+    }
+
+    // ==== 편의 메서드 ==== //
+    public void usingLeave() {
+        this.leave.decreaseRemainingDays();
+    }
+
+    public boolean isManager() {
+        return this.role == Role.MANAGER;
+    }
+
+    public void registerManager() {
+        team.changeManager(this.name);
     }
 }
