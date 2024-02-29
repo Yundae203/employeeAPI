@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/v1")
 @RequiredArgsConstructor
-public class WorkRecordService {
+public class WorkRecordController {
 
     private final WorkTimeRecordService workTimeRecordService;
 
