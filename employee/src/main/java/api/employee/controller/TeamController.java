@@ -26,9 +26,7 @@ public class TeamController {
 
     @GetMapping("/team-list")
     public List<TeamResponse> findAllTeam() {
-        return teamService.findAllTeam().stream()
-                .map(TeamResponse::fromTeam)
-                .toList();
+        return teamService.findAllTeam();
     }
 
     @GetMapping("/team/{teamId}")

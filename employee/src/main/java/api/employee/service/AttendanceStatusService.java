@@ -18,7 +18,7 @@ public class AttendanceStatusService {
 
     @Transactional
     public void recordArrivalTime(Long memberId, LocalDate attendanceDate, LocalTime startTime) {
-        Member member = memberService.findMemberById(memberId);
+        Member member = memberService.findReferenceMember(memberId);
         workTimeRecordService.recordArrivalTime(member, attendanceDate, startTime);
     }
 }

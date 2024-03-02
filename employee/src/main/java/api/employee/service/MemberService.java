@@ -27,6 +27,10 @@ public class MemberService {
         memberRepository.save(member);
     }
 
+    public Member findReferenceMember(Long memberId) {
+        return memberRepository.getReferenceById(memberId);
+    }
+
     public List<MemberResponse> findAllMember() {
         return memberRepository.findAll().stream()
                 .map(MemberResponse::fromMember)

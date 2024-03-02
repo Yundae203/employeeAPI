@@ -26,8 +26,9 @@ public class TeamService {
         teamRepository.save(teamForm.convertToTeam());
     }
 
-    public List<Team> findAllTeam() {
+    public List<TeamResponse> findAllTeam() {
         return teamRepository.findAll().stream()
+                .map(TeamResponse::fromTeam)
                 .toList();
     }
 
